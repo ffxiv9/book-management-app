@@ -1,0 +1,21 @@
+.card {
+    cursor: pointer;
+}
+
+.card:hover {
+    transition: transform 300ms ease-in;
+    transform: scale(1.1);
+}
+
+.card img {
+    height: 18rem;
+    object-fit: cover;
+}
+
+.card-info {
+    position: absolute;
+    bottom: 0;
+    background: var(--bs-gray);
+
+    color: aliceblue;
+}

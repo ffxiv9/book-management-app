@@ -1,0 +1,7 @@
+.star {
+    color: var(--bs-gray-300);
+}
+
+.star.active {
+    color: var(--bs-gray);
+}
