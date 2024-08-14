@@ -2,7 +2,7 @@ import {Spinner} from 'react-bootstrap'
 
 import './style.css'
 
-export default function Loader() {
+export function Loader() {
     return (
         <div className="loader">
             <Spinner animation="grow" variant="primary" />

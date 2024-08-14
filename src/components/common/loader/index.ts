@@ -1,1 +1,1 @@
-export {default as Loader} from './component'
+export * from './component'

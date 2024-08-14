@@ -8,7 +8,7 @@ export interface PaginationProps {
     onPageChanged: (newPage: number) => void
 }
 
-export default function Pagination({page, pageCount, onPageChanged}: PaginationProps) {
+export function Pagination({page, pageCount, onPageChanged}: PaginationProps) {
     const firstPage: number = 1
 
     return (

@@ -1,10 +1,10 @@
-import {ErrorBoundary} from '@app/components/common'
+import {ErrorMessage} from '@app/components/common'
 
 function NotFound() {
     return (
-        <ErrorBoundary>
+        <ErrorMessage>
             <div className="fw-bold d-flex justify-content-center">Page Not Found!</div>
-        </ErrorBoundary>
+        </ErrorMessage>
     )
 }
 

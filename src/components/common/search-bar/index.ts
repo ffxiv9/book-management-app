@@ -1,3 +1,8 @@
-export type {SearchBarVariant} from './component'
-export type {SearchBarProps} from './component'
-export {default as SearchBar} from './component'
+import {Filter} from './filter'
+import {Search} from './search'
+
+export type {SearchBarProps} from './search'
+
+export const SearchBar = Object.assign(Search, {
+    Filter,
+})

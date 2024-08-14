@@ -1,1 +1,1 @@
-export {default as ReadingProgress} from './reading-progress'
+export * from './reading-progress'

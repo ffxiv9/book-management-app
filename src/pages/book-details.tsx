@@ -1,36 +1,30 @@
-import {Col, Container, Image, Row, Stack} from 'react-bootstrap'
+import {Stack, Badge} from 'react-bootstrap'
 import {useParams} from 'react-router-dom'
 
-import {ReadingProgress} from '@app/enums'
-import {FavoriteBookInfo} from '@app/types'
-import {useDictionaryLocalStorage} from '@app/hooks'
 import {useGetBookQuery} from '@app/services/api'
-
-import {ErrorBoundary, Loader} from '@app/components/common'
-import openLibrary from '@app/utils/open-library'
-import {
-    BookDescription,
-    BookNotes,
-    BookRating,
-    BookReadingProgress,
-} from '@app/components/features/book'
+import {FavoriteBookInfo} from '@app/types'
+import {ReadingProgress} from '@app/enums'
+import {useDictionaryLocalStorage} from '@app/hooks'
+import {ErrorMessage, Loader} from '@app/components/common'
+import {BookInfo} from '@app/components/features/book-info'
+import {AuthorList} from '@app/components/features/author-list'
+import {FAVORITES} from '@app/constants'
 
 export default function BookDetails() {
     const {bookId} = useParams()
-    const {data: book, isLoading, isFetching, isError} = useGetBookQuery(Number(bookId))
-
+    const {data, isLoading, isFetching, isError} = useGetBookQuery(Number(bookId))
     const [favorites, setFavorite] =
-        useDictionaryLocalStorage<FavoriteBookInfo>('favorites')
+        useDictionaryLocalStorage<FavoriteBookInfo>(FAVORITES)
 
     if (isError) {
         return (
-            <ErrorBoundary>
+            <ErrorMessage>
                 <p>Error loading details.</p>
-            </ErrorBoundary>
+            </ErrorMessage>
         )
     }
 
-    if (isLoading || isFetching || !book) {
+    if (isLoading || isFetching || !data) {
         return <Loader />
     }
 
@@ -42,39 +36,39 @@ export default function BookDetails() {
     }
 
     return (
-        <Container className="mt-3">
-            <Row>
-                <Col md={4} className="justify-content-center">
-                    <Stack gap={3}>
-                        {book.coverId && (
-                            <Row className="justify-content-center">
-                                <Image
-                                    src={openLibrary.getBookCoverUrl(book.coverId)}
-                                    style={{width: '18rem'}}
-                                    thumbnail
-                                />
-                            </Row>
-                        )}
-                        <Row className="g-2">
-                            {favorites[bookId!] && (
-                                <BookReadingProgress
-                                    readingProgress={favorites[bookId!].readingProgress}
-                                    onReadingProgressChanged={handleReadingProgressChange}
-                                />
-                            )}
+        <BookInfo>
+            <BookInfo.Group groupSize="4">
+                <Stack gap={2}>
+                    {data.coverId && <BookInfo.Image id={data.coverId} />}
 
-                            <BookNotes id={Number(bookId)} />
-                        </Row>
-                    </Stack>
-                </Col>
+                    {favorites[bookId!] && (
+                        <BookInfo.Progress
+                            progress={favorites[bookId!].readingProgress}
+                            onProgressChanged={handleReadingProgressChange}
+                        />
+                    )}
 
-                <Col md={8}>
-                    <div className="h2">{book.title}</div>
+                    <BookInfo.Notes id={Number(bookId)} />
+                </Stack>
+            </BookInfo.Group>
+            <BookInfo.Group groupSize="8">
+                <div className="h2">{data.title}</div>
+                <BookInfo.Rating id={Number(bookId)} />
 
-                    <BookRating id={Number(bookId)} />
-                    <BookDescription book={book} />
-                </Col>
-            </Row>
-        </Container>
+                {data.subjectPeople && (
+                    <BookInfo.SubjectPeople subjectPeople={data.subjectPeople} />
+                )}
+
+                {data.publishYear && (
+                    <Badge bg="secondary">Publish Date: {data.publishYear}</Badge>
+                )}
+
+                {data.description && (
+                    <BookInfo.Description description={data.description} />
+                )}
+
+                {data.authorIds && <AuthorList authorIds={data.authorIds} />}
+            </BookInfo.Group>
+        </BookInfo>
     )
 }

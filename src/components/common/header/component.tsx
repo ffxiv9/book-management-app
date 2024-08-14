@@ -3,11 +3,10 @@ import {Link} from 'react-router-dom'
 import {useSelector} from 'react-redux'
 
 import {selectSearchState} from '@app/slices/search-slice'
-import {SearchBar} from '../search-bar'
-import {SearchFilter} from '../search-filter'
+import {SearchBar} from '@app/components/common'
 import './style.css'
 
-export default function Header() {
+export function Header() {
     const {query} = useSelector(selectSearchState)
 
     return (
@@ -21,7 +20,7 @@ export default function Header() {
                     {query && (
                         <div className="ms-auto">
                             <SearchBar>
-                                <SearchFilter />
+                                <SearchBar.Filter />
                             </SearchBar>
                         </div>
                     )}

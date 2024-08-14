@@ -7,7 +7,7 @@ export interface RatingProps {
     onStarRating: (value: number) => void
 }
 
-export default function Rating({rating, onStarRating}: RatingProps) {
+export function Rating({rating, onStarRating}: RatingProps) {
     const [currentStars, setCurrentStars] = useState(rating)
     const [hover, setHover] = useState(0)
 
