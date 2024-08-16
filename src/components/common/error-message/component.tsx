@@ -5,8 +5,13 @@ export function ErrorMessage({children}: PropsWithChildren) {
     return (
         <Alert variant="danger">
             <Alert.Heading>An error occurred!</Alert.Heading>
-            <hr />
-            {children}
+
+            {children && (
+                <>
+                    <hr />
+                    {children}
+                </>
+            )}
         </Alert>
     )
 }

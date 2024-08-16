@@ -2,7 +2,7 @@ import {Stack} from 'react-bootstrap'
 import {Outlet} from 'react-router-dom'
 
 import {Header} from '@app/components/common'
-import './layout.css'
+import './style.css'
 
 function Layout() {
     return (

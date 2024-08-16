@@ -6,12 +6,12 @@ import {ErrorMessage, Loader, Pagination} from '@app/components/common'
 import {BookList} from '@app/components/features/book-list'
 import {buildQueryFilter} from '@app/utils'
 
-export interface BookSearchResultProps {
+export interface BookSearchProps {
     filter: string
     query: string
 }
 
-export function BookSearchResult({filter, query}: BookSearchResultProps) {
+export function BookSearch({filter, query}: BookSearchProps) {
     const pageSize = 12
     const [page, setPage] = useState(1)
 

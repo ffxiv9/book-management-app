@@ -4,8 +4,8 @@ import {useDispatch, useSelector} from 'react-redux'
 import searchFieldMap from '@app/mappers/search-field-map'
 import {setAvailableFilters, selectSearchState} from '@app/slices/search-slice'
 import {SearchBar} from '@app/components/common'
-import {BookSearchResult} from '@app/components/features/book-search-result'
-import './home.css'
+import {BookSearch} from '@app/components/features/book-search'
+import './style.css'
 
 function Home() {
     const searchState = useSelector(selectSearchState)
@@ -20,7 +20,7 @@ function Home() {
     }, [dispatch])
 
     return searchState.query ? (
-        <BookSearchResult query={searchState.query} filter={searchState.filter} />
+        <BookSearch query={searchState.query} filter={searchState.filter} />
     ) : (
         <div className="search-container">
             <SearchBar variant="large" placeholder="Search book in library">

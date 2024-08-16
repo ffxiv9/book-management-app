@@ -13,7 +13,7 @@ import {
 } from '@app/types'
 import {environment} from '@app/environments/environment'
 import {mapAuthor, mapBook} from '@app/mappers/openlibrary'
-import {buildParams} from '@app/utils'
+import {buildUrlParams} from '@app/utils'
 
 export const api = createApi({
     reducerPath: 'api',
@@ -26,7 +26,7 @@ export const api = createApi({
             BookQueryFilter
         >({
             query: ({title, publishYear, author, page, pageSize}) => {
-                const params = buildParams({
+                const params = buildUrlParams({
                     offset: Math.max(Number(page) - 1, 0) * pageSize,
                     limit: pageSize,
                     title: title,

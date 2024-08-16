@@ -6,8 +6,9 @@ import {setAvailableFilters, selectSearchState} from '@app/slices/search-slice'
 import {SearchBar, Pagination} from '@app/components/common'
 import {BookList} from '@app/components/features/book-list'
 import {useDictionaryLocalStorage} from '@app/hooks'
+import {ReadingProgressFilter} from '@app/enums'
 import {FavoriteBookInfo, ReferenceId} from '@app/types'
-import {ReadingProgress} from '@app/enums'
+import {hasRequiredProgress} from '@app/utils'
 import {FAVORITES} from '@app/constants'
 
 function Favorites() {
@@ -20,14 +21,11 @@ function Favorites() {
     const [favorites] = useDictionaryLocalStorage<FavoriteBookInfo>(FAVORITES)
 
     useEffect(() => {
-        dispatch(
-            setAvailableFilters([
-                'All books',
-                'Reading only',
-                'Finished only',
-                'Unfinished only',
-            ])
+        const filters: string[] = Object.keys(ReadingProgressFilter).filter((key) =>
+            isNaN(Number(key))
         )
+
+        dispatch(setAvailableFilters(filters))
 
         return () => {
             dispatch(setAvailableFilters([]))
@@ -41,19 +39,7 @@ function Favorites() {
             id: Number(bookId),
             ...favorites[bookId],
         }))
-        .filter((bookInfo) => {
-            switch (searchState.filter) {
-                case 'Finished only':
-                    return bookInfo.readingProgress == ReadingProgress.FINISHED
-                case 'Reading only':
-                    return bookInfo.readingProgress == ReadingProgress.READING
-                case 'Unfinished only':
-                    return bookInfo.readingProgress != ReadingProgress.FINISHED
-                default:
-                    return true
-            }
-        })
-        .slice((page - 1) * pageSize, page * pageSize)
+        .filter((bookInfo) => hasRequiredProgress(bookInfo, searchState.filter))
 
     return (
         <Container>
@@ -62,7 +48,9 @@ function Favorites() {
                 <SearchBar.Filter />
             </Row>
             <Row className="mt-3">
-                <BookList data={favoriteBooks} />
+                <BookList
+                    data={favoriteBooks.slice((page - 1) * pageSize, page * pageSize)}
+                />
 
                 <Pagination
                     page={page}
