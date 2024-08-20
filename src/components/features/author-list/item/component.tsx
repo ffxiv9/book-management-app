@@ -1,7 +1,7 @@
 import {Col, Container, Image, Row} from 'react-bootstrap'
 
 import {ReferenceId} from '@app/types'
-import {ErrorMessage} from '@app/components/common'
+import {Message} from '@app/components/common'
 import {useGetAuthorQuery} from '@app/services/api'
 import openLibrary from '@app/utils/open-library'
 
@@ -9,11 +9,7 @@ export function Item({id}: ReferenceId) {
     const {data, isLoading, isFetching, isError} = useGetAuthorQuery(id)
 
     if (isError) {
-        return (
-            <ErrorMessage>
-                <p>Error loading details.</p>
-            </ErrorMessage>
-        )
+        return <Message variant="error" text="Error loading details." />
     }
 
     if (isLoading || isFetching || !data) {

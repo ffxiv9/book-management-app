@@ -5,7 +5,7 @@ import {useGetBookQuery} from '@app/services/api'
 import {FavoriteBookInfo} from '@app/types'
 import {ReadingProgress} from '@app/enums'
 import {useDictionaryLocalStorage} from '@app/hooks'
-import {ErrorMessage, Loader} from '@app/components/common'
+import {Message, Loader} from '@app/components/common'
 import {BookInfo} from '@app/components/features/book-info'
 import {AuthorList} from '@app/components/features/author-list'
 import {FAVORITES} from '@app/constants'
@@ -17,11 +17,7 @@ export default function BookDetails() {
         useDictionaryLocalStorage<FavoriteBookInfo>(FAVORITES)
 
     if (isError) {
-        return (
-            <ErrorMessage>
-                <p>Error loading details.</p>
-            </ErrorMessage>
-        )
+        return <Message variant="error" text="Error loading details." />
     }
 
     if (isLoading || isFetching || !data) {

@@ -1,4 +1,4 @@
-import {useEffect, useState, PropsWithChildren} from 'react'
+import {useEffect, useState, useRef, PropsWithChildren} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {Button, Form, InputGroup, FloatingLabel} from 'react-bootstrap'
 
@@ -17,6 +17,7 @@ export function Search({
 }: PropsWithChildren<SearchBarProps>) {
     const {query} = useSelector(selectSearchState)
     const [inputValue, setInputValue] = useState(query)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const dispatch = useDispatch()
 
@@ -25,11 +26,17 @@ export function Search({
     }, [query])
 
     useEffect(() => {
-        const delay = setTimeout(() => {
-            dispatch(searchQuery(inputValue))
-        }, 2500)
+        const keyboardListener = (ev: KeyboardEvent) => {
+            if (ev.key === 'Enter') {
+                dispatch(searchQuery(inputValue))
+            }
+        }
 
-        return () => clearTimeout(delay)
+        inputRef.current?.addEventListener('keydown', keyboardListener)
+
+        return () => {
+            inputRef.current?.removeEventListener('keydown', keyboardListener)
+        }
     }, [dispatch, inputValue])
 
     const smallInput = (
@@ -39,6 +46,7 @@ export function Search({
             className="me-auto"
             value={inputValue}
             placeholder={placeholder}
+            ref={inputRef}
         />
     )
 

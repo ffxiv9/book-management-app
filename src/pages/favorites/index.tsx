@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useMemo} from 'react'
 import {Container, Row} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -8,7 +8,12 @@ import {BookList} from '@app/components/features/book-list'
 import {useDictionaryLocalStorage} from '@app/hooks'
 import {ReadingProgressFilter} from '@app/enums'
 import {FavoriteBookInfo, ReferenceId} from '@app/types'
-import {hasRequiredProgress} from '@app/utils'
+import {
+    hasRequiredProgress,
+    replaceUnderscoresWithSpaces,
+    replaceSpacesWithUnderscores,
+    capitalizeFirstLetter,
+} from '@app/utils'
 import {FAVORITES} from '@app/constants'
 
 function Favorites() {
@@ -18,12 +23,14 @@ function Favorites() {
     const searchState = useSelector(selectSearchState)
     const dispatch = useDispatch()
 
-    const [favorites] = useDictionaryLocalStorage<FavoriteBookInfo>(FAVORITES)
+    const [favoriteBooks] = useDictionaryLocalStorage<FavoriteBookInfo>(FAVORITES)
 
     useEffect(() => {
-        const filters: string[] = Object.keys(ReadingProgressFilter).filter((key) =>
-            isNaN(Number(key))
-        )
+        const filters = Object.keys(ReadingProgressFilter)
+            .filter((key) => isNaN(Number(key)))
+            .map((str) =>
+                capitalizeFirstLetter(replaceUnderscoresWithSpaces(str.toLowerCase()))
+            )
 
         dispatch(setAvailableFilters(filters))
 
@@ -34,12 +41,25 @@ function Favorites() {
 
     useEffect(() => setPage(1), [searchState.filter, setPage])
 
-    const favoriteBooks = Object.keys(favorites)
-        .map((bookId): FavoriteBookInfo & ReferenceId => ({
-            id: Number(bookId),
-            ...favorites[bookId],
-        }))
-        .filter((bookInfo) => hasRequiredProgress(bookInfo, searchState.filter))
+    const filteredBooks = useMemo(() => {
+        const data: (FavoriteBookInfo & ReferenceId)[] = Object.keys(favoriteBooks).map(
+            (bookId): FavoriteBookInfo & ReferenceId => ({
+                id: Number(bookId),
+                ...favoriteBooks[bookId],
+            })
+        )
+
+        const readingProgressFilter: ReadingProgressFilter | undefined =
+            ReadingProgressFilter[
+                replaceSpacesWithUnderscores(searchState.filter.toUpperCase())
+            ]
+
+        return readingProgressFilter === undefined
+            ? data
+            : data.filter((bookInfo) =>
+                  hasRequiredProgress(bookInfo, readingProgressFilter)
+              )
+    }, [favoriteBooks, searchState.filter])
 
     return (
         <Container>
@@ -49,12 +69,12 @@ function Favorites() {
             </Row>
             <Row className="mt-3">
                 <BookList
-                    data={favoriteBooks.slice((page - 1) * pageSize, page * pageSize)}
+                    data={filteredBooks.slice((page - 1) * pageSize, page * pageSize)}
                 />
 
                 <Pagination
                     page={page}
-                    pageCount={Math.ceil(favoriteBooks.length / pageSize)}
+                    pageCount={Math.ceil(filteredBooks.length / pageSize)}
                     onPageChanged={setPage}
                 ></Pagination>
             </Row>

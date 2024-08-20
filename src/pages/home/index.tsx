@@ -20,7 +20,10 @@ function Home() {
     }, [dispatch])
 
     return searchState.query ? (
-        <BookSearch query={searchState.query} filter={searchState.filter} />
+        <BookSearch
+            query={searchState.query}
+            filter={searchState.filter as keyof typeof searchFieldMap}
+        />
     ) : (
         <div className="search-container">
             <SearchBar variant="large" placeholder="Search book in library">

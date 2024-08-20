@@ -1,5 +1,4 @@
-export * from './extract-numbers'
+export * from './string-utils'
 export * from './build-url-params'
-export * from './build-query-filter'
 export * from './has-required-progress'
 export * from './open-library'

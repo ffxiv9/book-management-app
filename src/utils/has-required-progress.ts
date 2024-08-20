@@ -3,18 +3,15 @@ import {ReadingProgressFilter, ReadingProgress} from '@app/enums'
 
 export const hasRequiredProgress = (
     bookInfo: FavoriteBookInfo,
-    readingProgress: string
-) => {
-    const filterValue =
-        ReadingProgressFilter[readingProgress as keyof typeof ReadingProgressFilter]
-    const progress: ReadingProgress = bookInfo.readingProgress
-    switch (filterValue) {
+    readingProgress: ReadingProgressFilter
+): boolean => {
+    switch (readingProgress) {
         case ReadingProgressFilter.FINISHED_ONLY:
-            return progress == ReadingProgress.FINISHED
+            return bookInfo.readingProgress == ReadingProgress.FINISHED
         case ReadingProgressFilter.READING_ONLY:
-            return progress == ReadingProgress.READING
+            return bookInfo.readingProgress == ReadingProgress.READING
         case ReadingProgressFilter.UNFINISHED_ONLY:
-            return progress != ReadingProgress.FINISHED
+            return bookInfo.readingProgress != ReadingProgress.FINISHED
         default:
             return true
     }

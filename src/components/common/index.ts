@@ -1,4 +1,4 @@
-export * from './error-message'
+export * from './message'
 export * from './header'
 export * from './loader'
 export * from './pagination'
