@@ -1,5 +1,7 @@
 import {useState} from 'react'
-import {Button, Collapse, Row, Stack} from 'react-bootstrap'
+import {Button, Collapse, Row} from 'react-bootstrap'
+
+import {Message} from '@app/components/common'
 import {Item} from '../item'
 
 export interface AuthorListProps {
@@ -11,17 +13,18 @@ export function List({authorIds}: AuthorListProps) {
 
     return (
         <>
-            <Stack className="mt-2">
-                <Button variant="secondary" onClick={() => setOpen(!open)}>
-                    Show Authors
-                </Button>
-            </Stack>
+            <Button variant="secondary" className="w-100" onClick={() => setOpen(!open)}>
+                {open ? 'Hide Authors' : 'Show Authors'}
+            </Button>
+
             {open && (
                 <Collapse in={open}>
                     <Row
                         aria-orientation="vertical"
-                        className="g-2 mt-2 justify-content-center position-relative d-flex"
+                        className="m-0 mt-2 justify-content-center position-relative gap-2"
                     >
+                        {authorIds.length === 0 && <Message text="List is empty" />}
+
                         {authorIds.map((id) => (
                             <Item key={id} id={id} />
                         ))}

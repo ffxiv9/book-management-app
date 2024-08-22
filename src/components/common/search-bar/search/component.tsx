@@ -53,7 +53,7 @@ export function Search({
     const largeInput = <FloatingLabel label={placeholder}>{smallInput}</FloatingLabel>
 
     return (
-        <InputGroup className="m-3">
+        <InputGroup className="m-2">
             {children}
 
             {variant === 'small' && smallInput}

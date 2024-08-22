@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 
+import {DEFAULT_PAGE_SIZE} from '@app/constants'
 import {useGetBooksQuery} from '@app/services/api'
 import {Message, Loader, Pagination} from '@app/components/common'
 import {BookList} from '@app/components/features/book-list'
@@ -11,13 +12,12 @@ export interface BookSearchProps {
 }
 
 export function BookSearch({filter, query}: BookSearchProps) {
-    const pageSize = 12
     const [page, setPage] = useState(1)
 
     const {data, isLoading, isFetching, isError} = useGetBooksQuery({
         [searchFieldMap[filter]]: query,
+        pageSize: DEFAULT_PAGE_SIZE,
         page,
-        pageSize,
     })
 
     useEffect(() => {

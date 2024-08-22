@@ -12,22 +12,19 @@ export function Header() {
     return (
         <header>
             <nav>
-                <Stack direction="horizontal" gap={3}>
+                <Stack direction="horizontal">
                     <div className="p-3">
                         <Link to="/">Home</Link>
                     </div>
-
-                    {query && (
-                        <div className="ms-auto">
-                            <SearchBar>
-                                <SearchBar.Filter />
-                            </SearchBar>
-                        </div>
-                    )}
-
-                    <div className="ms-auto p-3">
+                    <div className="p-3">
                         <Link to="/favorites">Favorites</Link>
                     </div>
+
+                    {query && (
+                        <SearchBar>
+                            <SearchBar.Filter />
+                        </SearchBar>
+                    )}
                 </Stack>
             </nav>
         </header>

@@ -14,10 +14,10 @@ import {
     replaceSpacesWithUnderscores,
     capitalizeFirstLetter,
 } from '@app/utils'
-import {FAVORITES} from '@app/constants'
+import {FAVORITES, DEFAULT_PAGE_SIZE} from '@app/constants'
 
 function Favorites() {
-    const pageSize = 12
+    const pageSize = DEFAULT_PAGE_SIZE
     const [page, setPage] = useState(1)
 
     const searchState = useSelector(selectSearchState)
